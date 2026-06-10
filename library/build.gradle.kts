@@ -5,6 +5,8 @@ plugins {
 }
 
 kotlin {
+    jvm()
+
     androidTarget {
         publishLibraryVariants("release")
         compilations.all {
@@ -27,6 +29,8 @@ kotlin {
     }
 
     sourceSets {
+        jvmMain.dependencies {}
+        
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
         }
@@ -51,4 +55,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+
+mavenPublishing {
+    coordinates(
+        groupId = "io.github.froyder",
+        artifactId = "kmp-inapp-review",
+        version = "0.1.0-local"
+    )
 }
