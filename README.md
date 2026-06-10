@@ -1,5 +1,8 @@
 # KMP In-App Review
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.froyder/kmp-inapp-review)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
+
 A Kotlin Multiplatform library that wraps the native in-app review APIs
 for Android and iOS under a unified, coroutine-friendly interface.
 
@@ -18,11 +21,19 @@ commonMain.dependencies {
 
 ## Usage
 
-```kotlin
-// commonMain — works for both platforms
-val reviewManager = ReviewManager() // iOS
-val reviewManager = ReviewManager(activity) // Android
+Create a platform-specific instance once, at app startup:
 
+```kotlin
+// Android
+val reviewManager = ReviewManager(activity)
+
+// iOS
+val reviewManager = ReviewManager()
+```
+
+Then call from shared `commonMain` code — identical for both platforms:
+
+```kotlin
 viewModelScope.launch {
     try {
         reviewManager.requestReview()
@@ -43,7 +54,7 @@ viewModelScope.launch {
 | Platform | Minimum version |
 |---|---|
 | Android | API 21 |
-| iOS | iOS 14 |
+| iOS | iOS 16 |
 
 ## License
 
