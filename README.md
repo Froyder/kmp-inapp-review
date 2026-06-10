@@ -1,31 +1,50 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# KMP In-App Review
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+A Kotlin Multiplatform library that wraps the native in-app review APIs
+for Android and iOS under a unified, coroutine-friendly interface.
 
-* [/shared](librarysrc) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](library/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](library/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](library/src/jvmMain/kotlin)
-    folder is the appropriate location.
+- **Android**: Google Play In-App Review API
+- **iOS**: SKStoreReviewController
+- **Unified API**: single `requestReview()` call from shared code
 
-### Running the apps
+## Installation
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+```kotlin
+// build.gradle.kts
+commonMain.dependencies {
+    implementation("io.github.froyder:kmp-inapp-review:1.0.0")
+}
+```
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+## Usage
 
-### Running tests
+```kotlin
+// commonMain — works for both platforms
+val reviewManager = ReviewManager() // iOS
+val reviewManager = ReviewManager(activity) // Android
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+viewModelScope.launch {
+    try {
+        reviewManager.requestReview()
+    } catch (e: Exception) {
+        // handle error
+    }
+}
+```
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+## Important notes
 
----
+- Neither platform guarantees the dialog will be shown
+- Android rate-limits via Google Play; iOS rate-limits to 3 times per year
+- The library contract is "flow completed without error", not "dialog was shown"
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Platform support
+
+| Platform | Minimum version |
+|---|---|
+| Android | API 21 |
+| iOS | iOS 14 |
+
+## License
+
+Apache 2.0

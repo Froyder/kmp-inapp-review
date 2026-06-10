@@ -44,6 +44,10 @@ kotlin {
             implementation(libs.coroutines.test)
         }
     }
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
 }
 
 android {
