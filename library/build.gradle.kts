@@ -30,7 +30,7 @@ kotlin {
 
     sourceSets {
         jvmMain.dependencies {}
-        
+
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
         }
@@ -41,6 +41,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.coroutines.test)
         }
     }
 }
